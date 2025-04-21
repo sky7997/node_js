@@ -34,7 +34,7 @@ app.post('/users', (req, res, next) => {
       id: users.length + 1,
       name
     };
-    users.push(newUser);
+    users.push(newUser); // server doesn't need json only client need json format so we use it in res below line
     res.status(201).json(newUser);
   } catch (err) {
     next(err);
