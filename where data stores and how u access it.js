@@ -71,13 +71,9 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 // 🟢 Connect to MongoDB
-mongoose.connect(process.env.DB_URL, {
-  useNewUrlParser: true, //useNewUrlParser: true: Ensures Mongoose uses the new and improved connection string parser.
-  useUnifiedTopology: true //useUnifiedTopology: true: Ensures the MongoDB connection uses the modern, unified topology engine for better reliability and performance.
-
-}).then(() => console.log("✅ MongoDB Connected"))
+mongoose.connect(process.env.DB_URL)
+  .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("MongoDB error:", err));
-
 // 🔐 Login API
 app.post("/login", async (req, res) => { //  ← 🟡 here u creating login route so to u use it in frontend 
   const { username, password } = req.body;
