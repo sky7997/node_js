@@ -21,7 +21,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
-let users=require("./mockData")
+let users=require("./mockData") //dont use const users bcs u have to change data
 
 
 // GET root endpoint
