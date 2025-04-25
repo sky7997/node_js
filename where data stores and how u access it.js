@@ -22,7 +22,7 @@ how u access it
 -----------------
   const express = require("express");
 const app = express();
-const users = require("./mockUsers"); // ← 🟡 Importing mock users from a file
+let users = require("./mockUsers"); // ← 🟡 Importing mock users from a file
 
 app.post("/login", (req, res) => { //  ← 🟡 here u creating login route so to u use it in frontend 
   const { username, password } = req.body;
