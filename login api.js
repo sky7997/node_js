@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json()); // To parse JSON body
 
-const users = require("./mockUsers"); // Import mock data
+let users = require("./mockUsers"); // Import mock data
 
 // 🧪 Login Route
 app.post("/login", async (req, res) => { // didnt used next bcz no need of it here
