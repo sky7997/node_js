@@ -32,7 +32,7 @@ app.use(express.json()); // To parse JSON body
 const users = require("./mockUsers"); // Import mock data
 
 // 🧪 Login Route
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => { // didnt used next bcz no need of it here
   const { username, password } = req.body;
 
   // Check if username and password are provided
@@ -41,9 +41,9 @@ app.post("/login", (req, res) => {
   }
 
   // Find user in mock database
-  const user = users.find(
+  const user = await new Promise((resolve)=> resolve( users.find(
     (u) => u.username === username && u.password === password
-  );
+  )));
 
   if (!user) {
     return res.status(401).json({ error: "Invalid credentials" });
