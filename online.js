@@ -15,14 +15,13 @@ module.exports = [
   ];
 
 //server.js file
-require("dotenv").config();
 const express = require("express");
+const cors = require('cors'); // Import cors
 const app = express();
 const PORT = process.env.PORT || 5000;
-
+app.use(cors()); // Enable CORS //cors that allows browsers to make requests to a server on a different domain (or port) 
 app.use(express.json());
-let users=require("./mockData") //dont use const users bcs u have to change data
-
+let users=require("./mockData")
 
 // GET root endpoint
 app.get("/", (req, res) => {
