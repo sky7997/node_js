@@ -21,7 +21,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
-const users=require("./mockData")
+let users=require("./mockData")
 
 
 // GET root endpoint
