@@ -31,7 +31,7 @@ const getOpenTickets = async () => {
 
 
 // Route to fetch all open tickets
-app.get("/tickets/open", async (req, res) => {
+app.get("/tickets/open", async (req, res) => { //creating new route /open
   try {
     const openTickets = await getOpenTickets(); // await:async functions to pause execution until a Promise is resolved.
     res.status(200).json(openTickets); // Send response as JSON
