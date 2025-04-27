@@ -180,7 +180,7 @@ app.put("/users/:id", (req, res) => {
   const index = mockData.findIndex((ticket) => ticket.id === parseInt(id));
   
   if (index !== -1) {
-    mockData[index] = { ...mockData[index], ...updatedTicket }; //rewriting syntax c=c+n
+    mockData[index] = { ...mockData[index], ...updatedTicket }; //its a rewriting syntax c=c+n
     //here...mockData[index] spreads all key,value pairs and ...updatedTicket adds new spread key,value pairs
     // we used... in ...updatedTicket because it has more key value pairs not single
     res.json(mockData[index]); // Return the updated ticket
