@@ -164,7 +164,7 @@ app.get("/users", (req, res) => {
 
 // POST request to add a new ticket to the mock data
 app.post("/users", (req, res) => {
-  const newTicket = req.body;
+  const newTicket = req.body; //here body = newicket(id,name,unit,toggle) from frontend
   const newTicketId = mockData.length ? mockData[mockData.length - 1].id + 1 : 1; // Generate a new ID
   const addedTicket = { ...newTicket, id: newTicketId };
   mockData.push(addedTicket); // Add new ticket to the mock data
@@ -174,13 +174,15 @@ app.post("/users", (req, res) => {
 // PUT request to update a ticket's status
 app.put("/users/:id", (req, res) => {
   const { id } = req.params;
-  const updatedTicket = req.body;
+  const updatedTicket = req.body; //to know body check frntend body in put request
   
   // Find the ticket and update it
   const index = mockData.findIndex((ticket) => ticket.id === parseInt(id));
   
   if (index !== -1) {
-    mockData[index] = { ...mockData[index], ...updatedTicket };
+    mockData[index] = { ...mockData[index], ...updatedTicket }; //rewriting syntax c=c+n
+    //here...mockData[index] spreads all key,value pairs and ...updatedTicket adds new spread key,value pairs
+    // we used... in ...updatedTicket because it has more key value pairs not single
     res.json(mockData[index]); // Return the updated ticket
   } else {
     res.status(404).json({ message: "Ticket not found" });
