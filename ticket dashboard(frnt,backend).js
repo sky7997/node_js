@@ -133,6 +133,12 @@ export default App;
 
 
 //Backend
+├── node_modules/           # Installed dependencies (auto-created)
+├── .gitignore              # Git ignore file
+├── package.json            # Project metadata and dependencies
+├── server.js               # Main Express server
+├── mockData.js            # Mock user data
+
 //mockData.js
 module.exports = [
     { id: 1, name: "rcb", unit: 200, toggle: true },
