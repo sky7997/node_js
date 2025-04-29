@@ -163,6 +163,15 @@ useEffect(()=>{
 
 export default App;
 
+//backend
+├── node_modules/           # Installed dependencies (auto-created)
+├── .gitignore              # Git ignore file
+├── package.json            # Project metadata and dependencies
+├── server.js               # Main Express server
+├── mockData.js            # Mock user data
+
+//mockData.js
+module.exports = [];
 //server.js
 const express=require("express")
 const cors=require("cors")
