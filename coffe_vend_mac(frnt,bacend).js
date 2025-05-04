@@ -1,4 +1,5 @@
 //App.js
+//App.js
 import React, {useState,useEffect} from "react"
 const App=()=>{
   const [selectedCoffee, setSelectedCoffee] = useState("")
@@ -33,12 +34,12 @@ calculate(cc,size,qnty,addOn)
 const sizechnge=(e)=>{
   const sc=e.target.value
   setSize(sc)
-  calculate(sc,selectedCoffee,addOn,qnty)
+  calculate(selectedCoffee,sc,qnty,addOn)
 }
 const onChnageqty=(e)=>{
   const cq=parseInt(e.target.value)
   setQnty(cq)
-  calculate(cq,selectedCoffee,addOn,size)
+  calculate(selectedCoffee,size,cq,addOn)
 }
 const addChange=(e)=>{
   
@@ -152,6 +153,8 @@ const calculate=(selectedCoffee,size,qnty,addOn)=>{
   )
 }
 export default App
+
+
 
 //backend
 //Mockdata.js
