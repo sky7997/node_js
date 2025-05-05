@@ -1,106 +1,99 @@
 //App.js
 import React,{useState,useEffect} from "react"
 const App=()=>{
-const [page,setPage]=useState("Login")
+const [data,setData]=useState([])
 const [username,setUsername]=useState("")
 const [password,setPassword]=useState("")
 const [msg,setMsg]=useState("")
-const [data,setData]=useState([])
+const [page,setPage]=useState("login")
 useEffect(()=>{
-  fetch("http://localhost:5000/data")
-    .then(res=>res.json())
-    .then(dat=>setData(dat))
-},[])
-const handleReg=()=>{
-  if (!username || !password) {
-    setMsg("pls fill details")
-    return 
-  }
-  const findd=data.find((a)=>a.username===username )
-   if (findd) {setMsg("user Already Exists"); return } //u using return here bcs u not using "else" statement
-  fetch("http://localhost:5000/data",{
-    method: "POST",
-    headers:{
-"Content-Type":"application/json"
-    },
-    body:JSON.stringify({username,password})
-  })
-
-  .then(()=>{
-    setPage("Login")
-  setMsg("reg success")
-  setUsername("")
-  setPassword("")
-  
-  })
+  fetch("http://localhost:5000/users")
   .then(res=>res.json())
   .then(dat=>setData(dat))
-}
-const handleLog=()=>{
-  if (!username || !password) {
-    setMsg("pls fill details")
+},[])
+
+const regF=()=>{
+  if (!username || !password) return
+  const fnd=data.find(t=>t.username===username)
+  if (fnd){
+    setMsg("user already exists")
     return
   }
-  const check=data.find((k)=>k.username===username && k.password===password)
-  if (check) {
-setMsg("log usccess")
+  const newdat={username:username,password:password}
+  fetch("http://localhost:5000/users",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify(newdat)
+  }).then(res=>res.json())
+  .then(dat=>{
+    setData(prev=>[...prev,dat])
+    setPage("login")
+    setUsername("")
+    setPassword("")
+    setMsg("reg success")
+  })
+  }
 
-  } else {setMsg("invalid details")}
-  setUsername("")
-  setPassword("")
-  setMsg("")
+const logF=()=>{
+  if (!username || !password) return
+  const fnd=data.find(t=>t.username===username && t.password===password)
+  if (fnd) {
+    setMsg("log success")
+    setUsername("")
+    setPassword("")
+  }
+  else {
+    setMsg("autenication filed")
+  }
 }
-
-const handlesetpag=()=>{
-  setPage("Register")
+const wanReg=()=>{
+  setPage("register")
 }
-  return (
-    <div>
-      {page==="Login" ? <h2>Login</h2> : <h2>Register</h2>}
-      <label>Username</label>
-      <input
-      type="text"
-      value={username}
-      onChange={(s)=>setUsername(s.target.value)}
-      />
-      <label>Password</label>
-      <input
-      type="password"
-      value={password}
-      onChange={(s)=>setPassword(s.target.value)}
-      />
-      {page==="Register" ? (<button onClick={handleReg}> Register</button>) : (<button onClick={handleLog}>Login</button>)}
-      {msg && <p>{msg}</p>}
-      <button onClick={handlesetpag}>wanna Register</button>
-    </div>
-  )
+return (
+  <div>
+    {page==="login" ? <p>Login</p> : <p>Register</p>}
+    <label>Username</label>
+    <input
+    type="text"
+    value={username}
+    onChange={e=>setUsername(e.target.value)}
+    />
+    <label>password</label>
+    <input
+    type="password"
+    value={password}
+    onChange={e=>setPassword(e.target.value)}
+    />
+    {page==="login" ? <button onClick={logF}>Login</button> : <button onClick={regF}>Register</button>}
+    <button onClick={wanReg}>wanna register </button>
+    {msg && <p>{msg}</p>}
+  </div>
+)
 }
 export default App
 
 //backend
 //mockData.js
-  module.exports=[{username:"",password:""}]
+  module.exports=[]
 //server.js
-
-  const express=require("express")
+const express=require("express")
 const cors=require("cors")
-const port=5000
 const app=express()
-app.use(cors())
+const port=5000
 app.use(express.json())
-let data=require("./mockData")
+app.use(cors())
+const users=require("./mockData")
 
-app.get("/", (req,res)=>{
-  res.json("server running")
+app.get("/users",(req,res)=>{
+  res.json(users)
 })
-app.get("/data", (req,res)=>{
-  res.json(data)
-})
-app.post("/data",(req,res)=>{
-  const newDat=req.body
-  data.push(newDat)
-  res.status(201).json(newDat)
+app.post("/users",(req,res)=>{
+  const dat=req.body
+  users.push(dat)
+  res.status(201).json(dat)
 })
 app.listen(port,()=>{
-  console.log(`Server running on http://localhost:${port}`)
+  console.log(`server running on http://localhost:${port}`)
 })
