@@ -305,7 +305,7 @@ const addOns=[
 module.exports={cofeeOptions,sizes,addOns}
  //.env
  PORT=5000
-MONGO_URI=mongodb+srv://project1:project123@cluster0.6ipy4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+MONGO_URI=mongodb+srv://project1:<password>@cluster0.6ipy4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 //server.js
  require("dotenv").config()
 const express=require("express")
