@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 
 app.get("/users", async (req, res) => {
   try {
-    const users = await User.find(); // Get all users
+    const users = await Todo.find(); // Get all users
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch users" });
@@ -51,7 +51,7 @@ app.get("/users", async (req, res) => {
 
 app.post("/users", async (req, res) => {
   try {
-    const user = new User(req.body);
+    const user = new Todo(req.body);
     const savedUser = await user.save();
     res.status(201).json(savedUser);
   } catch (err) {
@@ -61,7 +61,7 @@ app.post("/users", async (req, res) => {
 
 app.put("/users/:id", async (req, res) => {
   try {
-    const updated = await User.findByIdAndUpdate(
+    const updated = await Todo.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
@@ -75,7 +75,7 @@ app.put("/users/:id", async (req, res) => {
 
 app.delete("/users/:id", async (req, res) => {
   try {
-    const deleted = await User.findByIdAndDelete(req.params.id);
+    const deleted = await Todo.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ error: "User not found" });
     res.send(`User ${req.params.id} deleted`);
   } catch (err) {
