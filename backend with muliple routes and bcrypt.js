@@ -8,37 +8,24 @@ backend
   server.js
 
 //userRoutes.js
-require("dotenv").config();
 const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt"); // ✅ Added bcrypt
+const bcrypt = require("bcrypt");
 const User = require("../models/User");
 
-const app = express();
-const port = process.env.PORT || 5000;
-
-app.use(express.json());
-app.use(cors());
-
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error("Server issue: ", err));
+const router = express.Router();
 
 // Get all users
-app.get("/users", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const users = await User.find(); // Fetch users from MongoDB
+    const users = await User.find();
     res.json(users);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 
-// Create a new user
-app.post("/users", async (req, res) => {
+// Register a new user
+router.post("/", async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -47,29 +34,24 @@ app.post("/users", async (req, res) => {
       return res.status(400).json({ error: "User already exists" });
     }
 
-    // ✅ Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = new User({ username, password: hashedPassword });
-
-    console.log("New user to be saved:", newUser);
 
     await newUser.save();
     res.status(201).json({ message: "User created successfully" });
   } catch (err) {
-    console.error("Error saving user:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
 // Login route
-app.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const user = await User.findOne({ username });
     if (!user) return res.status(400).json({ error: "User not found" });
 
-    // ✅ Compare provided password with hashed one
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid credentials" });
@@ -78,19 +60,11 @@ app.post("/login", async (req, res) => {
     const { password: _, ...userData } = user.toObject();
     res.json({ message: "Login success", user: userData });
   } catch (err) {
-    console.error("Login error:", err);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// Home route
-app.get("/", (req, res) => {
-  res.json("Server running");
-});
-
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+module.exports = router;
 
 
 ------------------------------------------------------------------------------------
