@@ -389,7 +389,8 @@ const WrappedApp  = () => {
 
 // Wrap App in Router **only during export**
 const App = () => (
-  <Router>
+ return (
+   <Router>
     <WrappedApp />
   </Router>
 );
