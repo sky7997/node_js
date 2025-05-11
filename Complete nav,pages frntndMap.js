@@ -356,7 +356,6 @@ const WrappedApp  = () => {
   }, []);
 
   const handleLoginSuccess = () => {
-    Cookies.set("loggedIn", "true");
     setIsLoggedIn(true);
     navigate("/");
   };
