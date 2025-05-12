@@ -96,7 +96,7 @@ const App = () => {
       .then(dat => setData(dat));
 
     // Check if already logged in
-    fetch("http://localhost:5000/protected", {
+    fetch("http://localhost:5000/users/protected", {
       credentials: "include"
     })
       .then(res => res.json())
@@ -150,7 +150,7 @@ const App = () => {
   };
 
   const logout = () => {
-    fetch("http://localhost:5000/logout", {
+    fetch("http://localhost:5000/users/logout", {
       method: "POST",
       credentials: "include"
     }).then(() => setMsg("Logged out"));
