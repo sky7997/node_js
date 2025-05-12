@@ -4,11 +4,11 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const users = require("./mockData");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const port = 5000;
-const SECRET = process.env.JWT_SECRET;
+const SECRET = process.env.JWT_SECRET || "secret"; // fallback if not in .env
 
 app.use(express.json());
 app.use(cookieParser());
@@ -17,29 +17,39 @@ app.use(cors({
   credentials: true
 }));
 
-// Get all users
+const users = []; // Still using in-memory for demo
+
+// Get all users (optional, for testing)
 app.get("/users", (req, res) => {
-  res.json(users);
+  res.json(users.map(u => ({ username: u.username }))); // hide passwords
 });
 
 // Register
-app.post("/users", (req, res) => {
-  const user = req.body;
-  users.push(user);
-  res.status(201).json(user);
+app.post("/users", async (req, res) => {
+  const { username, password } = req.body;
+  const exists = users.find(u => u.username === username);
+  if (exists) return res.status(400).json({ error: "User already exists" });
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  users.push({ username, password: hashedPassword });
+  res.status(201).json({ message: "User created" });
 });
 
-// Login with JWT + Cookie
-app.post("/users/loginn", (req, res) => {
+// Login with JWT + bcrypt
+app.post("/users/loginn", async (req, res) => {
   const { username, password } = req.body;
-  const found = users.find(u => u.username === username && u.password === password);
-  if (!found) return res.status(401).json({ error: "Invalid credentials" });
+  const user = users.find(u => u.username === username);
+  if (!user) return res.status(401).json({ error: "Invalid credentials" });
+
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return res.status(401).json({ error: "Invalid credentials" });
 
   const token = jwt.sign({ username }, SECRET, { expiresIn: "1d" });
 
   res.cookie("token", token, {
     httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV === "production"
   });
 
   res.json({ message: "Login successful" });
@@ -67,6 +77,7 @@ app.post("/logout", (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
 
 ----------------------------------------------------------------
 // App.js
