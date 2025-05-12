@@ -1,47 +1,39 @@
 //Q. write a node.js/express API endpoint to fetch all open tickets
 // from an array(mock data) use async/await
-
-require("dotenv").config();
-const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Mock Data (Array of tickets)
-let tickets = [
-  { id: 1, name: "rcb", unit: 200, toggle: true },
-  { id: 2, name: "csk", unit: 200, toggle: false },
-  { id: 3, name: "kkr", unit: 200, toggle: true },
-  { id: 4, name: "srh", unit: 200, toggle: false },
+//mockData.js
+const dummyItems = [
+  { name: "Laptop", price: "75000", location: "Bangalore", phno: "9876543210", carted: false },
+  { name: "Phone", price: "30000", location: "Chennai", phno: "9123456780", carted: true },
+  { name: "Headphones", price: "2500", location: "Delhi", phno: "9988776655", carted: false },
+  { name: "Keyboard", price: "1500", location: "Mumbai", phno: "8888666622", carted: true },
+  { name: "Monitor", price: "12000", location: "Hyderabad", phno: "9001122334", carted: false }
 ];
+//server.js
+module.exports=dummyItems
+require("dotenv").config()
+const express = require("express");
+const cors = require("cors");
+const mockData = require("./mockData"); // Import the mock data
+const mongoose=require("mongoose")
+const app = express();
+const port = 5000;
 
-// Async function to simulate fetching data
-const getOpenTickets = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const openTickets = tickets.filter((ticket) => ticket.toggle);
-      resolve(openTickets);
-    }, 1000); // Simulate a delay (1 second)
-  });
-};
-//async: Marks the function as asynchronous, meaning it returns a promise and can use await inside.
-//new Promise(...): This creates a new Promise object, which is used to handle async work (e.g., something that takes time).
-//resolve: This is a function you call when your async task is done, and you want to return a result.
-//We used the 1-second delay (setTimeout) just to simulate a real-world delay, like a call to a database, API, or some slow external service.
-//1 sec delay It’s only there to act like a "fake delay" for testing purposes — it's not because await needs a delay to work.
+app.use(cors()); // Allow CORS for frontend requests
+app.use(express.json()); // Middleware to parse JSON request body
+mongoose.connect(process.env.MONGO_URI)
+.then(()=>console.log("connected momgodb"))
+.catch(err=>console.error("server issue",err))
 
-
-// Route to fetch all open tickets
-app.get("/tickets/open", async (req, res) => { //creating new route /open
-  try {
-    const openTickets = await getOpenTickets(); // await:async functions to pause execution until a Promise is resolved.
-    res.status(200).json(openTickets); // Send response as JSON
-  } catch (err) {
-    console.error("Error fetching tickets:", err);
-    res.status(500).json({ error: "Unable to fetch open tickets" });
+app.get("/opendats", async (req,res)=>{
+  try{
+    const data= await mockData.filter(t=>!t.carted) // u using mockdata not original momgodb thts why using filter 
+  res.json(data)                                    //instead of find({carted:false})
   }
-});
+  catch(err){
+    res.status(501).json({error:"servre error"})
+  }
+})
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running on http://localhost:${port}`);
 });
