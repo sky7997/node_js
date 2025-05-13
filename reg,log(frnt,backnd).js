@@ -1,4 +1,5 @@
 //App.js
+//App.js
 import React,{useState,useEffect} from "react"
 const App=()=>{
 const [data,setData]=useState([])
@@ -13,7 +14,12 @@ useEffect(()=>{
 },[])
 
 const regF=()=>{
-  if (!username || !password) return
+  if (!username || !password) return setMsg("fill fields")
+  if (username.length<5) return setMsg("username must be above 5 characters")
+    if (password.length<5) return setMsg("password must be above 5 characters")
+      const spsls=['!', '@', '#', '$', '%', '^', '&', '*'];
+    const check=spsls.some(t=>password.includes(t))
+    if (!check) return setMsg("password must contain one special character")
   const fnd=data.find(t=>t.username===username)
   if (fnd){
     setMsg("user already exists")
@@ -73,6 +79,7 @@ return (
 )
 }
 export default App
+
 
 //backend
 //mockData.js
