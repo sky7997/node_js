@@ -129,7 +129,7 @@ const ac=(e)=>{
   if (checked) {
     add=[...am,value]
     setA(add)
-    calculation(add,cm,sm,qnty)
+    calculation(cm,sm,qnty,add)
   }
   else {
     add=am.filter(t=>t !== value)
