@@ -130,8 +130,8 @@ const port=5000
 const app=express()
 app.use(cors())
 app.use(express.json())
-let users=require("./mockData")
-
+let users=require("./mockData") // i used let because in delete operation im reassigning the value 
+                                //users=users.filter(t=>t.id !== parseInt(id))
 app.get("/", (req,res)=>{
   res.json("server running")
 })
@@ -159,7 +159,7 @@ else {
 })
 app.delete("/users/:id",(req,res)=>{
     const {id}=req.params
-    users=users.filter(t=>t.id !== parseInt(id))
+   users=users.filter(t=>t.id !== parseInt(id)) //let users value reassigned here
     res.send(`user ${id} deleted`)
 })
 app.listen(port,()=>{
