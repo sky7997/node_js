@@ -39,14 +39,20 @@ async function fileOperations() {
 
 fileOperations();
 ...............................................................................................................
+// fs with json file
+//we use .json instead of .js because .js has code while .json has only data
 //root map
 backend
   data.json //we use .json instead of .js because .js has code while .json has only data
   server.js
-
+//data.json
+{
+  "name": "John",
+  "age": 30,
+  "email": "john@example.com",
+  "location": "New York"
+}
 //server.js
-// fs with json file
-//we use .json instead of .js because .js has code while .json has only data
 const fs = require('fs').promises; 
 async function fileOperations() {
   try {
@@ -75,4 +81,20 @@ async function fileOperations() {
 }
 
 fileOperations();
+.....................................................................................
+//Q.write a function in node js to read a JSON file from the filesystem and return its contents as a javaScript object
 
+const fs = require('fs').promises; 
+async function fileOperations() {
+  try {
+    // Read and parse JSON data
+    const fileContent = await fs.readFile('./data.json', 'utf-8');
+    const jsonData = JSON.parse(fileContent);
+    console.log('Read JSON:', jsonData);
+   
+  } catch (err) {
+    console.error('Error:', err);
+  }
+}
+
+fileOperations();
